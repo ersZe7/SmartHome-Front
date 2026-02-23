@@ -1,25 +1,36 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/authStore';
+import { register } from '@/api/auth';
 
 const router = useRouter()
-const authStores = useAuthStore()
 
 const email = ref('')
 const password = ref('')
+const confirmPassword = ref('')
 const error = ref('')
-const loading = ref('')
+const success = ref('')
+const loading = ref(false)
 
-async function handleLogin() {
+async function handleRegister() {
     error.value = ''
+    success.value = ''
+
+    if(password.value !== confirmPassword.value) {
+        error.value = 'Passwords do not match'
+        return
+    }
+
     loading.value = true
 
     try {
-        await authStore.login(email.value, password.value)
-        router.push('/dashboard')
+        await register(email.value, password.value) 
+        success.value = 'Account created!'
+        setTimeout(() => {
+            router.push('/login')
+        }, 1500)
     } catch(e) {
-        error.value = "nevernyi email ili parol"
+        error.value = e.response?.data?.detail || 'Registration error'
     } finally {
         loading.value = false
     }
@@ -32,9 +43,9 @@ async function handleLogin() {
     <div class="login-container">
         <div class="login-box">
             <h1>SmartHome</h1>
-            <p>Monitoring of Smart Homes</p>
-
+            <p>Create an account</p>
             <div class="form">
+
                 <input
                 v-model="email"
                 type="email"
@@ -47,20 +58,28 @@ async function handleLogin() {
                 placeholder="Password"
                 />
 
-                <p v-if="error" class="error">{{ error }}</p>
+                <input
+                v-model="confirmPassword"
+                type="password"
+                placeholder="Confirm password"
+                />
 
-                <button @click="handleLogin" :disabled="loading">
-                {{ loading ? 'Вход...' : 'Войти' }}
+                <p v-if="error" class="error">{{ error }}</p>
+                <p v-if="success" class="success">{{ success }}</p>
+
+                <button @click="handleRegister" :disabled="loading">
+                    {{ loading ? 'Registration...' : 'Sign Up'}}
                 </button>
 
                 <p class="link">
-                    Don't have an account?
-                    <span @click="router.push('/register')">Sign Up</span>
+                    Already have an account?
+                    <span @click="router.push('/login')">Sign In</span>
                 </p>
+
             </div>
         </div>
     </div>
-    </template>
+</template>
 
 
 <style scoped>
@@ -69,17 +88,15 @@ async function handleLogin() {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0f172a
 }
 
 .login-box {
-    background: #1e293b;
     padding: 2rem;
     border-radius: 12px;
     width: 100%;
-    max-width: 400px;
+    min-width: 400px;
     text-align: center;
-    color: white
+    color: white;
 }
 
 h1{
@@ -89,10 +106,9 @@ h1{
 }
 
 p{
-    color:#94a3b8;
+    color: #94a3b8;
     margin-bottom: 2rem;
 }
-
 
 .form{
     display: flex;
@@ -100,15 +116,15 @@ p{
     gap: 1rem;
 }
 
+
 input {
     padding: 0.75rem 1rem;
     border-radius: 8px;
     border: 1px solid #334155;
     background: #0f172a;
     color: white;
-    font-size:  1rem;
+    font-size: 1rem;
 }
-
 
 button {
     padding: 0.75rem;
@@ -121,23 +137,29 @@ button {
     cursor: pointer;
 }
 
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+
+.error{
+    color: red;
+    margin: 0;
 }
 
-.error {
-    color: #f87171;
+.success {
+    color: #86efac;
     margin: 0;
 }
 
 .link {
-  margin: 0;
-  font-size: 0.875rem;
+    margin: 0;
+    font-size: 0.875rem;
 }
 
 .link span {
-  color: #38bdf8;
-  cursor: pointer;
+    color: #38bdf8;
+    cursor: pointer;
 }
+
+.link span:hover {
+  text-decoration: underline;
+}
+
 </style>
