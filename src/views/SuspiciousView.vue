@@ -48,40 +48,41 @@ function handleLogout() {
     <header class="header">
       <h1>SmartHome</h1>
       <div class="header-right">
-        <router-link to="/dashboard" class="nav-link">Дашборд</router-link>
-        <button @click="handleLogout" class="logout-btn">Выйти</button>
+        <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
+        <router-link to="/settings" class="nav-link">Settings</router-link>
+        <button @click="handleLogout" class="logout-btn">Logout</button>
       </div>
     </header>
 
     <main class="content">
-      <h2 class="page-title">Подозрительные пакеты</h2>
+      <h2 class="page-title">Suspicious packages</h2>
 
-      <!-- Фильтры -->
+      
       <div class="filters">
         <input v-model="filters.src_ip" placeholder="Фильтр по IP" />
         <input v-model="filters.src_mac" placeholder="Фильтр по MAC" />
         <select v-model="filters.label">
-          <option value="">Все метки</option>
+          <option value="">All tags</option>
           <option value="PENDING">PENDING</option>
           <option value="BENIGN">BENIGN</option>
           <option value="ATTACK">ATTACK</option>
         </select>
-        <button @click="applyFilters" class="filter-btn">Найти</button>
-        <button @click="resetFilters" class="reset-btn">Сбросить</button>
+        <button @click="applyFilters" class="filter-btn">Search</button>
+        <button @click="resetFilters" class="reset-btn">Reset</button>
       </div>
 
-      <div v-if="store.loading" class="loading">Загрузка...</div>
+      <div v-if="store.loading" class="loading">Loading...</div>
 
       <div v-else class="table-container">
         <table>
           <thead>
             <tr>
-              <th>IP источника</th>
-              <th>MAC источника</th>
-              <th>MAC назначения</th>
-              <th>Вероятность</th>
-              <th>Метка</th>
-              <th>Действие</th>
+              <th>Source IP</th>
+              <th>Source MAC</th>
+              <th>Destination MAC</th>
+              <th>Probability</th>
+              <th>Label</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -111,7 +112,7 @@ function handleLogout() {
         </table>
 
         <p v-if="store.packets.length === 0" class="empty">
-          Пакеты не найдены
+          Packages not found
         </p>
       </div>
     </main>

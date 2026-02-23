@@ -2,7 +2,11 @@
   <div class="dashboard">
     <header class="header">
       <h1>SmartHome</h1>
-      <button @click="handleLogout" class="logout-btn">Выйти</button>
+      <div class="header-right">
+        <router-link to="/suspicious" class="nav-link">Suspicious</router-link>
+        <router-link to="/settings" class="nav-link">Settings</router-link>
+        <button @click="handleLogout" class="logout-btn">Выйти</button>
+      </div>
     </header>
 
     <main class="content">
@@ -87,4 +91,21 @@ h1 {
   margin-top: 4rem;
   font-size: 1.25rem;
 }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
 </style>

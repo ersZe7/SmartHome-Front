@@ -3,6 +3,7 @@ import DashboardView from "@/views/DashboardView.vue"
 import LoginView from "@/views/LoginView.vue"
 import RegisterView from "@/views/RegisterView.vue"
 import SuspiciousView from "@/views/SuspiciousView.vue"
+import SettingsView from "@/views/SettingsView.vue"
 
 
 const routes = [
@@ -33,6 +34,11 @@ const routes = [
         path: '/suspicious',
         name: 'Suspicious',
         component: SuspiciousView
+    },
+    {
+        path: '/settings',
+        name: 'Settings',
+        component: SettingsView
     }
 ]
 
