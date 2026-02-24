@@ -4,12 +4,12 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
 
 const router = useRouter()
-const authStores = useAuthStore()
+const authStore = useAuthStore()
 
 const email = ref('')
 const password = ref('')
 const error = ref('')
-const loading = ref('')
+const loading = ref(false)
 
 async function handleLogin() {
     error.value = ''
@@ -19,7 +19,7 @@ async function handleLogin() {
         await authStore.login(email.value, password.value)
         router.push('/dashboard')
     } catch(e) {
-        error.value = "nevernyi email ili parol"
+        error.value = "Invalid Email or password"
     } finally {
         loading.value = false
     }
@@ -77,7 +77,7 @@ async function handleLogin() {
     padding: 2rem;
     border-radius: 12px;
     width: 100%;
-    max-width: 400px;
+    max-width: 700px;
     text-align: center;
     color: white
 }

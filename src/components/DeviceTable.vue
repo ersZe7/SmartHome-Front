@@ -7,12 +7,12 @@ defineProps({
 })
 
 function statusLabel(status) {
-    const labels = {
-        normal: 'Норма',
-        suspicious: 'Подозрительно',
-        anomaly: 'Аномалия'
-    }
-    return labels[status] || status
+  const labels = {
+    normal: 'Normal',
+    suspicious: 'Suspicious',
+    anomaly: 'Anomaly'
+  }
+  return labels[status] || status
 }
 
 </script>
@@ -24,10 +24,10 @@ function statusLabel(status) {
         <table>
             <thead>
                 <tr>
-                    <th>MAC адрес</th>
-                    <th>потоков</th>
-                    <th>Вероятность угрозы</th>
-                    <th>Статус</th>
+                    <th>MAC Address</th>
+                    <th>Flows</th>
+                    <th>Thread Probability</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>

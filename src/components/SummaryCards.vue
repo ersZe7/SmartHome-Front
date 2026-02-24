@@ -11,17 +11,17 @@ defineProps({
 <template>
     <div class="summary-grid">
         <div class="card">
-            <span class="card-label">Всего потоков</span>
+            <span class="card-label">Total Flows</span>
             <span class="card-value">{{ summary.total_flows }}</span>
         </div>
 
         <div class="card">
-            <span class="card-label">Устройств</span>
+            <span class="card-label">Devices</span>
             <span class="card-value">{{ summary.total_sources }}</span>
         </div>
 
         <div class="card anomaly">
-            <span class="card-label">Аномальных</span>
+            <span class="card-label">Anomalies</span>
             <span class="card-value">{{ summary.anomalous_sources }}</span>
         </div>
     </div>
