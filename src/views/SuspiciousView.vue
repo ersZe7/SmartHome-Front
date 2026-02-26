@@ -79,26 +79,21 @@ function handleLogout() {
         <table>
           <thead>
             <tr>
-              <th>Source IP</th>
+              <th>User ID</th>
               <th>Source MAC</th>
               <th>Destination MAC</th>
               <th>Probability</th>
-              <th>Label</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <template v-for="packet in store.packets" :key="packet.id">
               <tr @click="toggleRow(packet.id)" class="main-row">
-                <td>{{ packet.src_ip }}</td>
+                <td>{{ packet.user_id }}</td>
                 <td class="mac">{{ packet.src_mac }}</td>
                 <td class="mac">{{ packet.dst_mac }}</td>
                 <td>{{ (packet.probability * 100).toFixed(1) }}%</td>
-                <td>
-                  <span :class="['badge', packet.label.toLowerCase()]">
-                    {{ packet.label }}
-                  </span>
-                </td>
+            
                 <td @click.stop>
                   <select
                     :value="packet.label"
