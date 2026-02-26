@@ -14,12 +14,17 @@ const filters = ref({
   label: ''
 })
 
+const expandedRow = ref(null)
+
+function toggleRow(id) {
+  expandedRow.value = expandedRow.value === id ? null : id
+}
+
 onMounted(() => {
   store.fetchPackets()
 })
 
 function applyFilters() {
-  // Убираем пустые фильтры перед отправкой
   const activeFilters = Object.fromEntries(
     Object.entries(filters.value).filter(([_, v]) => v !== '')
   )
@@ -41,8 +46,6 @@ function handleLogout() {
 }
 </script>
 
-
-
 <template>
   <div class="dashboard">
     <header class="header">
@@ -57,7 +60,6 @@ function handleLogout() {
     <main class="content">
       <h2 class="page-title">Suspicious Packets</h2>
 
-      
       <div class="filters">
         <input v-model="filters.src_ip" placeholder="Filter by IP" />
         <input v-model="filters.src_mac" placeholder="Filter by MAC" />
@@ -86,28 +88,85 @@ function handleLogout() {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="packet in store.packets" :key="packet.id">
-              <td>{{ packet.src_ip }}</td>
-              <td>{{ packet.src_mac }}</td>
-              <td>{{ packet.dst_mac }}</td>
-              <td>{{ (packet.probability * 100).toFixed(1) }}%</td>
-              <td>
-                <span :class="['badge', packet.label.toLowerCase()]">
-                  {{ packet.label }}
-                </span>
-              </td>
-              <td>
-                <select
-                  :value="packet.label"
-                  @change="handleLabelChange(packet.id, $event.target.value)"
-                  class="label-select"
-                >
-                  <option value="PENDING">PENDING</option>
-                  <option value="BENIGN">BENIGN</option>
-                  <option value="ATTACK">ATTACK</option>
-                </select>
-              </td>
-            </tr>
+            <template v-for="packet in store.packets" :key="packet.id">
+              <tr @click="toggleRow(packet.id)" class="main-row">
+                <td>{{ packet.src_ip }}</td>
+                <td class="mac">{{ packet.src_mac }}</td>
+                <td class="mac">{{ packet.dst_mac }}</td>
+                <td>{{ (packet.probability * 100).toFixed(1) }}%</td>
+                <td>
+                  <span :class="['badge', packet.label.toLowerCase()]">
+                    {{ packet.label }}
+                  </span>
+                </td>
+                <td @click.stop>
+                  <select
+                    :value="packet.label"
+                    @change="handleLabelChange(packet.id, $event.target.value)"
+                    class="label-select"
+                  >
+                    <option value="PENDING">PENDING</option>
+                    <option value="BENIGN">BENIGN</option>
+                    <option value="ATTACK">ATTACK</option>
+                  </select>
+                </td>
+              </tr>
+
+              <tr v-if="expandedRow === packet.id" class="expanded-row">
+                <td colspan="6">
+                  <div class="details-grid">
+                    <div class="detail-item">
+                      <span class="detail-label">ACK Flag</span>
+                      <span class="detail-value">{{ packet.ack_flag_number }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">PSH Flag</span>
+                      <span class="detail-value">{{ packet.psh_flag_number }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Rate</span>
+                      <span class="detail-value">{{ packet.rate }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Header Length</span>
+                      <span class="detail-value">{{ packet.header_length }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">TTL</span>
+                      <span class="detail-value">{{ packet.time_to_live }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Variance</span>
+                      <span class="detail-value">{{ packet.variance }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Max</span>
+                      <span class="detail-value">{{ packet.max }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Min</span>
+                      <span class="detail-value">{{ packet.min }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Std</span>
+                      <span class="detail-value">{{ packet.std }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Tot Sum</span>
+                      <span class="detail-value">{{ packet.tot_sum }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">HTTPS</span>
+                      <span class="detail-value">{{ packet.https ? 'Yes' : 'No' }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">DNS</span>
+                      <span class="detail-value">{{ packet.dns ? 'Yes' : 'No' }}</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
 
@@ -118,7 +177,6 @@ function handleLogout() {
     </main>
   </div>
 </template>
-
 
 <style scoped>
 .dashboard {
@@ -180,7 +238,7 @@ h1 {
 }
 
 .logout-btn:hover {
-  background: #f5f5f7;
+  background: #3d3d3f;
 }
 
 .content {
@@ -288,12 +346,48 @@ td {
   border-bottom: 1px solid #f5f5f7;
 }
 
-tr:last-child td {
-  border-bottom: none;
+.main-row {
+  cursor: pointer;
 }
 
-tr:hover td {
-  background: #fbfbfd;
+.main-row:hover td {
+  background: #f5f5f7;
+}
+
+.expanded-row td {
+  background: #f9f9fb;
+  padding: 1.5rem;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  color: #6e6e73;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: #1d1d1f;
+  font-weight: 500;
+}
+
+.mac {
+  font-family: 'SF Mono', 'Courier New', monospace;
+  font-size: 0.8rem;
 }
 
 .badge {
