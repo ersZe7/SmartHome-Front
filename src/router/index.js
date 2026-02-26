@@ -4,9 +4,16 @@ import LoginView from "@/views/LoginView.vue"
 import RegisterView from "@/views/RegisterView.vue"
 import SuspiciousView from "@/views/SuspiciousView.vue"
 import SettingsView from "@/views/SettingsView.vue"
+import HomeView from "@/views/HomeView.vue"
 
 
 const routes = [
+    {
+        path: '/',
+        name: 'Home',
+        component: HomeView
+
+    },
     {
         path: '/',
         redirect: '/login'

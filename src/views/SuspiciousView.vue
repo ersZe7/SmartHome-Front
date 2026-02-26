@@ -37,7 +37,7 @@ async function handleLabelChange(packetId, newLabel) {
 
 function handleLogout() {
   authStore.logout()
-  router.push('/login')
+  router.push('/')
 }
 </script>
 
@@ -46,21 +46,21 @@ function handleLogout() {
 <template>
   <div class="dashboard">
     <header class="header">
-      <h1>SmartHome</h1>
+      <h1>SentinelIoT</h1>
       <div class="header-right">
         <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
         <router-link to="/settings" class="nav-link">Settings</router-link>
-        <button @click="handleLogout" class="logout-btn">Logout</button>
+        <button @click="handleLogout" class="logout-btn">Sign Out</button>
       </div>
     </header>
 
     <main class="content">
-      <h2 class="page-title">Suspicious packages</h2>
+      <h2 class="page-title">Suspicious Packets</h2>
 
       
       <div class="filters">
-        <input v-model="filters.src_ip" placeholder="Фильтр по IP" />
-        <input v-model="filters.src_mac" placeholder="Фильтр по MAC" />
+        <input v-model="filters.src_ip" placeholder="Filter by IP" />
+        <input v-model="filters.src_mac" placeholder="Filter by MAC" />
         <select v-model="filters.label">
           <option value="">All tags</option>
           <option value="PENDING">PENDING</option>
@@ -123,106 +123,146 @@ function handleLogout() {
 <style scoped>
 .dashboard {
   min-height: 100vh;
-  background: #0f172a;
-  color: white;
+  background: #fbfbfd;
+  color: #1d1d1f;
+  font-family: -apple-system, 'SF Pro Display', 'Inter', sans-serif;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background: #1e293b;
-  border-bottom: 1px solid #334155;
+  padding: 0 2rem;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 h1 {
-  color: #38bdf8;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1d1d1f;
+  letter-spacing: -0.5px;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .nav-link {
-  color: #94a3b8;
+  color: #1d1d1f;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 1rem;
+  opacity: 0.8;
+  transition: opacity 0.2s;
 }
 
 .nav-link:hover {
-  color: white;
+  opacity: 1;
 }
 
 .logout-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #334155;
-  background: transparent;
-  color: #94a3b8;
+  padding: 0.4rem 1rem;
+  border-radius: 980px;
+  border: 1px solid #d2d2d7;
+  background: #1d1d1f;
+  color: white;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  transition: background 0.2s;
 }
 
 .logout-btn:hover {
-  background: #334155;
-  color: white;
+  background: #f5f5f7;
 }
 
 .content {
   padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .page-title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #1d1d1f;
   margin-bottom: 1.5rem;
-  color: white;
 }
 
 .filters {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .filters input,
 .filters select {
   padding: 0.6rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #334155;
-  background: #1e293b;
-  color: white;
+  border-radius: 10px;
+  border: 1px solid #d2d2d7;
+  background: #f5f5f7;
+  color: #1d1d1f;
   font-size: 0.875rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.filters input:focus,
+.filters select:focus {
+  outline: none;
+  border-color: #0071e3;
+  background: white;
 }
 
 .filter-btn {
   padding: 0.6rem 1.25rem;
-  border-radius: 8px;
+  border-radius: 980px;
   border: none;
-  background: #38bdf8;
-  color: #0f172a;
-  font-weight: bold;
+  background: #1d1d1f;
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  font-family: inherit;
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filter-btn:hover {
+  background: #3d3d3f;
 }
 
 .reset-btn {
   padding: 0.6rem 1.25rem;
-  border-radius: 8px;
-  border: 1px solid #334155;
-  background: transparent;
-  color: #94a3b8;
+  border-radius: 980px;
+  border: 1px solid #d2d2d7;
+  background: white;
+  color: #1d1d1f;
+  font-size: 0.875rem;
+  font-family: inherit;
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.reset-btn:hover {
+  background: #f5f5f7;
 }
 
 .table-container {
-  background: #1e293b;
-  border-radius: 12px;
+  background: white;
+  border-radius: 18px;
   padding: 1.5rem;
-  border: 1px solid #334155;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
 }
 
 table {
@@ -232,64 +272,73 @@ table {
 
 th {
   text-align: left;
-  color: #94a3b8;
-  font-size: 0.875rem;
-  padding: 0.75rem;
-  border-bottom: 1px solid #334155;
+  color: #6e6e73;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f5f5f7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 td {
-  padding: 0.75rem;
-  color: white;
-  border-bottom: 1px solid #334155;
+  padding: 0.85rem 1rem;
+  color: #1d1d1f;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #f5f5f7;
 }
 
 tr:last-child td {
   border-bottom: none;
 }
 
+tr:hover td {
+  background: #fbfbfd;
+}
+
 .badge {
   padding: 0.25rem 0.75rem;
-  border-radius: 999px;
+  border-radius: 980px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .badge.pending {
-  background: #1e3a5f;
-  color: #60a5fa;
+  background: #e8f0fe;
+  color: #1a56db;
 }
 
 .badge.benign {
-  background: #166534;
-  color: #86efac;
+  background: #d1fae5;
+  color: #065f46;
 }
 
 .badge.attack {
-  background: #7f1d1d;
-  color: #f87171;
+  background: #fee2e2;
+  color: #991b1b;
 }
 
 .label-select {
   padding: 0.4rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid #334155;
-  background: #0f172a;
-  color: white;
+  border-radius: 8px;
+  border: 1px solid #d2d2d7;
+  background: #f5f5f7;
+  color: #1d1d1f;
   font-size: 0.875rem;
+  font-family: inherit;
   cursor: pointer;
 }
 
 .loading {
   text-align: center;
-  color: #94a3b8;
+  color: #6e6e73;
   margin-top: 4rem;
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 
 .empty {
   text-align: center;
-  color: #94a3b8;
+  color: #6e6e73;
   padding: 2rem;
 }
 </style>

@@ -15,7 +15,7 @@ export const useSuspiciousStore = defineStore('suspicious', () => {
       const response = await getSuspiciousPackets(filters)
       packets.value = response.data
     } catch (e) {
-      // Мок данные 
+      // мок данные 
       packets.value = [
         {
           id: 1,
@@ -68,7 +68,7 @@ export const useSuspiciousStore = defineStore('suspicious', () => {
   async function updateLabel(packetId, label) {
     try {
       await updateLabelApi(packetId, label)
-      // Обновляем локально без перезагрузки
+      // обновляем локально без перезагрузки
       const packet = packets.value.find(p => p.id === packetId)
       if (packet) packet.label = label
     } catch (e) {
