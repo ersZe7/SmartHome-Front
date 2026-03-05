@@ -27,8 +27,12 @@ function handleLogout() {
     <header class="header">
       <h1>SentinelIoT</h1>
       <div class="header-right">
-        <router-link to="/suspicious" class="nav-link">Suspicious</router-link>
-        <router-link to="/settings" class="nav-link">Settings</router-link>
+        <router-link 
+        v-if="authStore.isAdmin" 
+        to="/suspicious" 
+        class="nav-link"
+        >Suspicious</router-link>
+        <router-link to="/profile" class="nav-link">Profile</router-link>
         <button @click="handleLogout" class="logout-btn">Sign Out</button>
       </div>
     </header>

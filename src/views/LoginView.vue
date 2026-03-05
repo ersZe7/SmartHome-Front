@@ -14,6 +14,7 @@ const loading = ref(false)
 async function handleLogin() {
     error.value = ''
     loading.value = true
+    console.log('handleLogin called', email.value, password.value) 
 
     try {
         await authStore.login(email.value, password.value)

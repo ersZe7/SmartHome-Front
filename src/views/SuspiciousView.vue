@@ -52,7 +52,7 @@ function handleLogout() {
       <h1>SentinelIoT</h1>
       <div class="header-right">
         <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
-        <router-link to="/settings" class="nav-link">Settings</router-link>
+        <router-link to="/profile" class="nav-link">Profile</router-link>
         <button @click="handleLogout" class="logout-btn">Sign Out</button>
       </div>
     </header>

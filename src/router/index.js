@@ -3,49 +3,41 @@ import DashboardView from "@/views/DashboardView.vue"
 import LoginView from "@/views/LoginView.vue"
 import RegisterView from "@/views/RegisterView.vue"
 import SuspiciousView from "@/views/SuspiciousView.vue"
-import SettingsView from "@/views/SettingsView.vue"
 import HomeView from "@/views/HomeView.vue"
-
 
 const routes = [
     {
         path: '/',
         name: 'Home',
         component: HomeView
-
     },
-    {
-        path: '/',
-        redirect: '/login'
-    },
-
     {
         path: '/login',
         name: 'Login',
         component: LoginView
     },
-
     {
         path: '/register',
         name: 'Register',
         component: RegisterView
     },
-
     {
         path: '/dashboard',
         name: 'Dashboard',
         component: DashboardView,
-        meta: { requiresAuth: true}
+        meta: { requiresAuth: true }
     },
     {
         path: '/suspicious',
         name: 'Suspicious',
-        component: SuspiciousView
+        component: SuspiciousView,
+        meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
-        path: '/settings',
-        name: 'Settings',
-        component: SettingsView
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('../views/ProfileView.vue'),
+        meta: { requiresAuth: true }
     }
 ]
 
@@ -56,11 +48,21 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token')
-    if(to.meta.requiresAuth && !token) {
+
+    if (to.meta.requiresAuth && !token) {
         next('/login')
-    } else {
-        next()
+        return
     }
+
+    if (to.meta.requiresAdmin) {
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        if (user.role !== 'ADMIN') {
+            next('/dashboard')
+            return
+        }
+    }
+
+    next()
 })
 
 export default router
