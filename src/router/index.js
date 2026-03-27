@@ -4,6 +4,7 @@ import LoginView from "@/views/LoginView.vue"
 import RegisterView from "@/views/RegisterView.vue"
 import SuspiciousView from "@/views/SuspiciousView.vue"
 import HomeView from "@/views/HomeView.vue"
+import ForgotPassword from "@/views/ForgotPassword.vue"
 
 const routes = [
     {
@@ -38,6 +39,16 @@ const routes = [
         name: 'Profile',
         component: () => import('../views/ProfileView.vue'),
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/forgot-password',
+        name: 'ForgotPassword',
+        component: () => import('../views/ForgotPassword.vue')
+    },
+    {
+        path: '/reset-password',
+        name: 'ResetPassword',
+        component: () => import('../views/ResetPassword.vue')
     }
 ]
 

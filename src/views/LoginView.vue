@@ -53,6 +53,10 @@ async function handleLogin() {
                 <button @click="handleLogin" :disabled="loading">
                     {{ loading ? 'Signing in...' : 'Sign In' }}
                 </button>
+                
+                <p class="link">
+                    <span @click="router.push('/forgot-password')">Forgot password?</span>
+                </p>
 
                 <p class="link">
                     Don't have an account?

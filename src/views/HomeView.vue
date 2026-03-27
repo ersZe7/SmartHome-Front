@@ -25,7 +25,7 @@
         </div>
       </div>
     </section>
-    <!-- Features -->
+
 <section class="features" id="features">
   <h2>Everything you need to stay secure.</h2>
   <div class="features-grid">
@@ -80,7 +80,7 @@
 
 
     <footer class="footer">
-      <p>© 2025 SentinelIoT. All rights reserved.</p>
+      <p>© 2026 SentinelIoT. All rights reserved.</p>
     </footer>
   </div>
 </template>
