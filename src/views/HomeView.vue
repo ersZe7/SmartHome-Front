@@ -9,6 +9,7 @@
       <div class="nav-logo">SentinelIoT</div>
       <div class="nav-links">
         <a href="#features">Features</a>
+        <router-link to="/help" class="nav-signin">Help</router-link>
         <router-link to="/login" class="nav-signin">Sign In</router-link>
         <router-link to="/register" class="nav-btn">Get Started</router-link>
       </div>

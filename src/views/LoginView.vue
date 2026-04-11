@@ -32,6 +32,7 @@ async function handleLogin() {
 <template>
     <div class="login-container">
         <div class="login-box">
+          <div class="back-link" @click="router.push('/')">← Back to Home</div>
             <h1>SentinelIoT</h1>
             <p>Monitoring of Smart Homes</p>
 
@@ -168,5 +169,17 @@ button:disabled {
 
 .link span:hover {
   text-decoration: underline;
+}
+
+.back-link {
+  color: #6e6e73;
+  font-size: 0.875rem;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.back-link:hover {
+  color: #1d1d1f;
 }
 </style>

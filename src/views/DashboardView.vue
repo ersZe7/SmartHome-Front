@@ -29,6 +29,7 @@ function handleLogout() {
           to="/suspicious" 
           class="nav-link"
         >Suspicious</router-link>
+        <router-link to="/tips" class="nav-link">Tips</router-link>
         <router-link to="/profile" class="nav-link">Profile</router-link>
         <button @click="handleLogout" class="logout-btn">Sign Out</button>
       </div>

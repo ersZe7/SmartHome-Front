@@ -1,6 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-box">
+      <div class="back-link" @click="router.push('/')">← Back to Home</div>
       <h1>SentinelIoT</h1>
 
       <div v-if="step === 1">
@@ -183,5 +184,20 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   font-weight: 500;
 }
 
-.link span:hover { text-decoration: underline; }
+.link span:hover {
+text-decoration: underline;
+}
+
+
+.back-link {
+  color: #6e6e73;
+  font-size: 0.875rem;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.back-link:hover {
+  color: #1d1d1f;
+}
 </style>
