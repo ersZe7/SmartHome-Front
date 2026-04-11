@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/authStore.js'
-import { updateTelegramId, getTelegramId } from '../api/users.js'
+import { updateTelegramId, getTelegramId, getOrangePiId, updateOrangePiId } from '../api/users.js'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -14,15 +14,18 @@ const telegramError = ref('')
 const telegramSuccess = ref('')
 const telegramLoading = ref(false)
 
+const orangePiId = ref('')
+const orangePiError = ref('')
+const orangePiSuccess = ref('')
+const orangePiLoading = ref(false)
+
 async function handleSaveTelegram() {
   telegramError.value = ''
   telegramSuccess.value = ''
-
   if (!telegramId.value.trim()) {
     telegramError.value = 'Please enter your Telegram ID'
     return
   }
-
   telegramLoading.value = true
   try {
     await updateTelegramId(telegramId.value.trim())
@@ -34,12 +37,36 @@ async function handleSaveTelegram() {
   }
 }
 
+async function handleSaveOrangePi() {
+  orangePiError.value = ''
+  orangePiSuccess.value = ''
+  if (!orangePiId.value.trim()) {
+    orangePiError.value = 'Please enter your Orange Pi ID'
+    return
+  }
+  orangePiLoading.value = true
+  try {
+    await updateOrangePiId(orangePiId.value.trim())
+    orangePiSuccess.value = 'Orange Pi ID saved successfully!'
+  } catch (e) {
+    orangePiError.value = e.response?.data?.detail || 'Error saving Orange Pi ID'
+  } finally {
+    orangePiLoading.value = false
+  }
+}
+
 onMounted(async () => {
   try {
     const res = await getTelegramId()
     telegramId.value = res.data.telegram_user_id || ''
   } catch (e) {
     console.error('Failed to load Telegram ID')
+  }
+  try {
+    const res = await getOrangePiId()
+    orangePiId.value = res.data.orange_pi_id || ''
+  } catch (e) {
+    console.error('Failed to load Orange Pi ID')
   }
 })
 
@@ -55,11 +82,7 @@ function handleLogout() {
       <h1>SentinelIoT</h1>
       <div class="header-right">
         <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
-        <router-link 
-        v-if="authStore.isAdmin" 
-        to="/suspicious" 
-        class="nav-link"
-        >Suspicious</router-link>
+        <router-link v-if="authStore.isAdmin" to="/suspicious" class="nav-link">Suspicious</router-link>
         <button @click="handleLogout" class="logout-btn">Sign Out</button>
       </div>
     </header>
@@ -68,33 +91,18 @@ function handleLogout() {
       <aside class="sidebar">
         <div class="sidebar-title">Account</div>
         <nav class="sidebar-nav">
-          <button
-            :class="['sidebar-item', activeTab === 'profile' ? 'active' : '']"
-            @click="activeTab = 'profile'"
-          >
-          Profile Info
-          </button>
-          <button
-            :class="['sidebar-item', activeTab === 'telegram' ? 'active' : '']"
-            @click="activeTab = 'telegram'"
-          >
-          Telegram
-          </button>
-          <button
-            :class="['sidebar-item', activeTab === 'security' ? 'active' : '']"
-            @click="activeTab = 'security'"
-          >
-          Security
-          </button>
+          <button :class="['sidebar-item', activeTab === 'profile' ? 'active' : '']" @click="activeTab = 'profile'">Profile Info</button>
+          <button :class="['sidebar-item', activeTab === 'telegram' ? 'active' : '']" @click="activeTab = 'telegram'">Telegram</button>
+          <button :class="['sidebar-item', activeTab === 'orangepi' ? 'active' : '']" @click="activeTab = 'orangepi'">🍊 Orange Pi</button>
         </nav>
       </aside>
 
       <main class="content">
 
+
         <div v-if="activeTab === 'profile'" class="tab-content">
           <h2>Profile Info</h2>
           <p class="subtitle">Your account information</p>
-
           <div class="info-card">
             <div class="info-row">
               <span class="info-label">Role</span>
@@ -107,25 +115,16 @@ function handleLogout() {
         <div v-if="activeTab === 'telegram'" class="tab-content">
           <h2>Telegram Notifications</h2>
           <p class="subtitle">Connect Telegram to receive anomaly alerts powered by Gemini AI</p>
-
           <div class="card">
             <div class="form">
-              <input
-                v-model="telegramId"
-                type="text"
-                placeholder="Your Telegram ID (e.g. 123456789)"
-              />
-              <p v-if="telegramId" class="current-id">
-                Current ID: <strong>{{ telegramId }}</strong>
-            </p>
-              
+              <input v-model="telegramId" type="text" placeholder="Your Telegram ID (e.g. 123456789)" />
+              <p v-if="telegramId" class="current-id">Current ID: <strong>{{ telegramId }}</strong></p>
               <p v-if="telegramError" class="error">{{ telegramError }}</p>
               <p v-if="telegramSuccess" class="success">{{ telegramSuccess }}</p>
               <button @click="handleSaveTelegram" :disabled="telegramLoading">
                 {{ telegramLoading ? 'Saving...' : 'Save' }}
               </button>
             </div>
-
             <div class="hint">
               <p>How to get your Telegram ID:</p>
               <ol>
@@ -137,30 +136,25 @@ function handleLogout() {
           </div>
         </div>
 
-    
-        <div v-if="activeTab === 'security'" class="tab-content">
-          <h2>Security</h2>
-          <p class="subtitle">Manage your account security</p>
 
+        <div v-if="activeTab === 'orangepi'" class="tab-content">
+          <h2>Orange Pi</h2>
+          <p class="subtitle">Connect your Orange Pi device to monitor your network</p>
           <div class="card">
-            <div class="security-row">
-              <div>
-                <div class="security-title">Password</div>
-                <div class="security-desc">Last changed: unknown</div>
-              </div>
-              <button class="outline-btn" disabled>Change Password</button>
+            <div class="form">
+              <input v-model="orangePiId" type="text" placeholder="Orange Pi ID (e.g. orange-pi-home-1)" />
+              <p v-if="orangePiId" class="current-id">Current ID: <strong>{{ orangePiId }}</strong></p>
+              <p v-if="orangePiError" class="error">{{ orangePiError }}</p>
+              <p v-if="orangePiSuccess" class="success">{{ orangePiSuccess }}</p>
+              <button @click="handleSaveOrangePi" :disabled="orangePiLoading">
+                {{ orangePiLoading ? 'Saving...' : 'Save' }}
+              </button>
             </div>
-
-            <div class="security-row danger">
-              <div>
-                <div class="security-title">Sign Out</div>
-                <div class="security-desc">Sign out from all devices</div>
-              </div>
-              <button class="danger-btn" @click="handleLogout">Sign Out</button>
+            <div class="hint">
+              <p>Your Orange Pi will use this ID to send network data to SentinelIoT.</p>
             </div>
           </div>
         </div>
-
       </main>
     </div>
   </div>
@@ -188,13 +182,13 @@ function handleLogout() {
   z-index: 100;
 }
 
-h1 {
+h1 { 
   font-size: 1.3rem;
   font-weight: 600;
   letter-spacing: -0.5px;
 }
 
-.header-right {
+.header-right { 
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -208,9 +202,11 @@ h1 {
   transition: opacity 0.2s;
 }
 
-.nav-link:hover { opacity: 1; }
+.nav-link:hover { 
+  opacity: 1;
+}
 
-.logout-btn {
+.logout-btn { 
   padding: 0.4rem 1rem;
   border-radius: 980px;
   border: 1px solid #d2d2d7;
@@ -221,7 +217,7 @@ h1 {
   font-family: inherit;
 }
 
-.layout {
+.layout { 
   display: flex;
   max-width: 900px;
   margin: 2rem auto;
@@ -229,7 +225,6 @@ h1 {
   padding: 0 2rem;
 }
 
-/* Sidebar */
 .sidebar {
   width: 200px;
   flex-shrink: 0;
@@ -266,14 +261,18 @@ h1 {
   transition: background 0.15s;
 }
 
-.sidebar-item:hover { background: #f5f5f7; }
+.sidebar-item:hover {
+  background: #f5f5f7;
+}
+
 .sidebar-item.active {
   background: #e8e8ed;
   font-weight: 500;
 }
 
-/* Content */
-.content { flex: 1; }
+.content {
+  flex: 1;
+}
 
 .tab-content h2 {
   font-size: 1.5rem;
@@ -288,7 +287,6 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
-/* Info card */
 .info-card {
   background: white;
   border-radius: 18px;
@@ -305,13 +303,21 @@ h1 {
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
-.info-row:last-child { border-bottom: none; }
+.info-row:last-child {
+  border-bottom: none;
+}
 
-.info-label { color: #6e6e73; font-size: 0.9rem; }
-.info-value { font-weight: 500; font-size: 0.9rem; }
+.info-label { 
+  color: #6e6e73;
+  font-size: 0.9rem;
+}
 
-/* Card */
-.card {
+.info-value { 
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.card { 
   background: white;
   border-radius: 18px;
   padding: 1.5rem;
@@ -326,7 +332,7 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
-input {
+input { 
   padding: 0.85rem 1rem;
   border-radius: 10px;
   border: 1px solid #d2d2d7;
@@ -354,52 +360,46 @@ button {
   font-family: inherit;
 }
 
-button:disabled { opacity: 0.5; cursor: not-allowed; }
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
-.error { color: #ff3b30; margin: 0; font-size: 0.875rem; }
-.success { color: #34c759; margin: 0; font-size: 0.875rem; }
+.error {
+  color: #ff3b30;
+  margin: 0;
+  font-size: 0.875rem;
+}
 
-.hint {
+.success {
+  color: #34c759;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.current-id {
+  color: #6e6e73;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.hint { 
   border-top: 1px solid rgba(0,0,0,0.06);
   padding-top: 1.5rem;
 }
 
-.hint p { color: #6e6e73; font-size: 0.875rem; margin-bottom: 0.75rem; }
-.hint ol { color: #6e6e73; font-size: 0.875rem; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; }
-.hint a { color: #0071e3; text-decoration: none; }
+.hint p {
+  color: #6e6e73;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
 
-
-.security-row {
+.hint ol {
+  color: #6e6e73;
+  font-size: 0.875rem;
+  padding-left: 1.25rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
-
-.security-row:last-child { border-bottom: none; }
-.security-title { font-weight: 500; margin-bottom: 0.25rem; }
-.security-desc { color: #6e6e73; font-size: 0.8rem; }
-
-.outline-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 980px;
-  border: 1px solid #d2d2d7;
-  background: transparent;
-  color: #1d1d1f;
-  font-size: 0.85rem;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.danger-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 980px;
-  border: none;
-  background: #ff3b30;
-  color: white;
-  font-size: 0.85rem;
-  cursor: pointer;
-  font-family: inherit;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 </style>

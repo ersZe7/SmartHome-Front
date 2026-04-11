@@ -3,14 +3,12 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFlowStore } from '../stores/flowStore.js'
 import { useAuthStore } from '../stores/authStore.js'
-import SummaryCards from '../components/SummaryCards.vue'
 import DeviceTable from '../components/DeviceTable.vue'
 
 const router = useRouter()
 const flowStore = useFlowStore()
 const authStore = useAuthStore()
 
-//сразу получаем данные
 onMounted(() => {
   flowStore.fetchResults()
 })
@@ -21,16 +19,15 @@ function handleLogout() {
 }
 </script>
 
-
 <template>
   <div class="dashboard">
     <header class="header">
       <h1>SentinelIoT</h1>
       <div class="header-right">
         <router-link 
-        v-if="authStore.isAdmin" 
-        to="/suspicious" 
-        class="nav-link"
+          v-if="authStore.isAdmin" 
+          to="/suspicious" 
+          class="nav-link"
         >Suspicious</router-link>
         <router-link to="/profile" class="nav-link">Profile</router-link>
         <button @click="handleLogout" class="logout-btn">Sign Out</button>
@@ -43,14 +40,11 @@ function handleLogout() {
       </div>
 
       <template v-else>
-        <SummaryCards v-if="flowStore.summary" :summary="flowStore.summary" />
-        <DeviceTable :devices="Object.values(flowStore.sources)" />
+        <DeviceTable :devices="flowStore.devices" />
       </template>
     </main>
   </div>
 </template>
-
-
 
 <style scoped>
 .dashboard {
@@ -127,5 +121,4 @@ h1 {
   margin-top: 4rem;
   font-size: 1rem;
 }
-
 </style>

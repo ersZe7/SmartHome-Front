@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getResults } from '../api/flows.js'
+import { getNetworkDevices, getResults } from '../api/flows.js'
 
 export const useFlowStore = defineStore('flow', () => {
+  const devices = ref([])
   const summary = ref(null)
   const sources = ref({})
   const loading = ref(false)
@@ -13,16 +14,23 @@ export const useFlowStore = defineStore('flow', () => {
     error.value = null
 
     try {
-      const response = await getResults()
-      summary.value = response.data.summary
-      sources.value = response.data.sources
+      const devicesRes = await getNetworkDevices()
+      devices.value = devicesRes.data
     } catch (e) {
-      error.value = 'Failed to load data'
-      console.error(e)
+      console.error('Failed to load devices', e)
+    }
+
+    try {
+      const flowsRes = await getResults()
+      summary.value = flowsRes.data.summary
+      sources.value = flowsRes.data.sources
+    } catch (e) {
+      // нет результатов ML — это нормально
+      console.log('No ML results yet')
     } finally {
       loading.value = false
     }
   }
 
-  return { summary, sources, loading, error, fetchResults }
+  return { devices, summary, sources, loading, error, fetchResults }
 })
