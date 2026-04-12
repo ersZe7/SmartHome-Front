@@ -135,11 +135,6 @@ button:hover {
 }
 
 
-button:disabled { 
-    opacity: 0.5; 
-    cursor: not-allowed; 
-}
-
 .error { 
     color: #ff3b30; 
     margin: 0; 

@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import api from '@/api/axios';
-import { f } from 'vue-router/dist/router-CWoNjPRp.mjs';
 
 
 const router = useRouter()

@@ -105,7 +105,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 2rem;
-  height: 70px;
+  height: 80px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: saturate(180%) blur(20px);
   position: sticky;
@@ -115,7 +115,7 @@
 }
 
 .nav-logo {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 600;
   color: #1d1d1f;
   letter-spacing: -0.5px;
@@ -130,7 +130,7 @@
 .nav-links a {
   text-decoration: none;
   color: #1d1d1f;
-  font-size: 0.9rem;
+  font-size: 1rem;
   opacity: 0.8;
   transition: opacity 0.2s;
 }
@@ -170,6 +170,16 @@
 
 .hero-content {
   max-width: 700px;
+}
+
+.hero {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(180deg, #bae6fd 0%, #e0f2fe 40%, #ffffff 100%);
 }
 
 .hero h1 {
