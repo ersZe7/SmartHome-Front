@@ -25,7 +25,7 @@ export const useFlowStore = defineStore('flow', () => {
       summary.value = flowsRes.data.summary
       sources.value = flowsRes.data.sources
     } catch (e) {
-      // нет результатов ML — это нормально
+
       console.log('No ML results yet')
     } finally {
       loading.value = false
