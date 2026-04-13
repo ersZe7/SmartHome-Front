@@ -94,6 +94,11 @@ onMounted(() => {
   flowStore.fetchResults()
   fetchChart()
 })
+
+function handleLogout() {
+  authStore.logout()
+  router.push('/')
+}
 </script>
 
 <template>
@@ -107,6 +112,24 @@ onMounted(() => {
         <button @click="handleLogout" class="logout-btn">Sign Out</button>
       </div>
     </header>
+    <div class="summary-grid" v-if="flowStore.summary">
+    <div class="summary-card">
+      <div class="summary-label">Total Flows</div>
+      <div class="summary-value">{{ flowStore.summary.total_flows }}</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Devices</div>
+      <div class="summary-value">{{ flowStore.summary.total_sources }}</div>
+    </div>
+    <div class="summary-card anomaly">
+      <div class="summary-label">Anomalies</div>
+      <div class="summary-value">{{ flowStore.summary.anomalous_sources }}</div>
+    </div>
+    <div class="summary-card suspicious">
+      <div class="summary-label">Suspicious</div>
+      <div class="summary-value">{{ flowStore.summary.suspicious_sources }}</div>
+    </div>
+  </div>
 
     <main class="content">
       <div v-if="flowStore.loading" class="loading">Loading...</div>
@@ -267,5 +290,44 @@ h1 {
   justify-content: center;
   color: #6e6e73;
   font-size: 0.9rem;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1.5rem 2rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+}
+
+.summary-label {
+  font-size: 0.8rem;
+  color: #6e6e73;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -1px;
+}
+
+.summary-card.anomaly .summary-value {
+  color: #dc2626;
+}
+
+.summary-card.suspicious .summary-value {
+  color: #ca8a04;
 }
 </style>
